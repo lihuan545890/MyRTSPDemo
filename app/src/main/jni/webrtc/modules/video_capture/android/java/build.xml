@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 具体写法参见 http://ant.apache.org/manual/index.html -->
+<project name="video_capture_module_java" default="compile" basedir=".">
+	<description>build jar of com.kedacom.truetouch.media</description>
+	<property name="android.jar.dir" value="/project/android-sdk-linux/platforms/android-19/android.jar"/>
+	<property name="dest.jar.dir" value="../../../../../../libs"/>
+    <!--
+         在 local.properties 中需要类似地定义如下变量
+             android.jar.dir=/home/xiezhigang/sdk/platforms/android-10/android.jar
+     -->
+    <property file="local.properties" />
+    <fail
+        message="Property `android.jar.dir' is not defined. Please specify it in `local.properties' file. Any questions please contact XieZhigang @ kedacom.com. 2013-08-27."
+        unless="android.jar.dir"
+    />
+
+	<property name="src" value="src" />
+	<property name="classes" value="bin/classes" />
+	<!--单独一个jar包，不在lib以及lib2目录下，使用一个单独的property定义，以便引用-->
+    <!--
+        注意，在 android-8 中如下内容没有定义，所以使用 android-10：
+            Camera.getNumberOfCameras()
+            Camera.CameraInfo
+            Camera.open()
+    -->
+
+    <property name="android2.3.3" value="${android.jar.dir}" />
+
+	<target name="init">
+		<mkdir dir="${classes}" />
+	</target>
+
+	<target name="compile" depends="init">
+        <!--property name="video.dir" value="../video" /-->
+		<javac srcdir="${src}" destdir="${classes}" includeantruntime="true">
+			<classpath>
+				<!--fileset dir="libs">
+					<include name="*.jar" />
+				</fileset-->
+                <pathelement location="${android2.3.3}" />
+			</classpath>
+            <!--src path="${video.dir}/VidCapture/java"/>
+            <src path="${video.dir}/VidOpengl/java"/>
+            <src path="${video.dir}/webrtc/modules/video_capture/android/java"/-->
+		</javac>
+		 <jar destfile="${dest.jar.dir}/video_capture_module_java.jar" basedir="${classes}"/>		
+	</target>
+
+	<!-- 创建时间戳 -->
+	<tstamp />
+
+	<!-- 定义jarfilename，准备进行打包操作。其中ant.project.name是ant默认的一个变量，值为最上面定义的project的name
+	${DSTAMP}为日期，格式为20111123；${TSTAMP}为时间，格式为2256，表示22点56分。
+		-->
+	<!-- property name="jarfilename" value="${ant.project.name}-${DSTAMP}${TSTAMP}.jar" / !-->
+	<property name="jarfilename" value="${ant.project.name}.jar" />
+	<!--打包开始，名字为jar，依赖任务为compile-->
+	
+	<target name="jar" depends="compile" description="make jar file">
+		<!--jar操作，jarfile指定jar包存放路径，basedir为编译后的class的目录-->
+		<jar jarfile="${jarfilename}" basedir="${classes}">
+			<!--为jar包指定manifest，当然，如果jar包不需要打成runnable的形式，manifest可以不要-->
+			<!--
+			<manifest>
+				//指定main-class
+				<attribute name="Main-Class" value="demo.SayHello" />
+				//指定Class-Path
+				<attribute name="Class-Path" value="${libs}">
+				</attribute>
+			</manifest>
+			-->
+		</jar>
+	</target>
+
+	<!--运行一下jar包，试试看效果-->
+	<!--其实这里就是运行jar命令，注意fork一定加上，不然不起作用-->
+<!--	
+	<target name="run" depends="jar">		
+		<java jar="${jarfilename}" fork="true">
+		</java>
+	</target>
+-->
+
+	<!-- 清理 -->
+	<target name="clean">
+		<!-- 可以以递归的方式删除目录 -->
+		<delete dir="${classes}" />
+		<delete dir="." includes="${ant.project.name}*.jar" />
+	</target>
+</project>
