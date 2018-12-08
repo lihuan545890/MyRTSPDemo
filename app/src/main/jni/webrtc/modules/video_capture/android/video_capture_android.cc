@@ -169,6 +169,17 @@ VideoCaptureAndroid::~VideoCaptureAndroid() {
   ats.env()->DeleteGlobalRef(_jCapturer);
 }
 
+void VideoCaptureAndroid::AttachToPreview(void * prevHolder)
+{
+  AttachThreadScoped ats(g_jvm);
+  JNIEnv* env = ats.env();
+
+   jmethodID j_attach =
+   env->GetMethodID(g_java_capturer_class, "AttachToPreview", "(Landroid/view/SurfaceHolder;)V");
+//   env->GetMethodID(g_java_capturer_class, "AttachToPreview", "(Ljava/lang/Object)V");   
+   env->CallVoidMethod(_jCapturer, j_attach, (jobject)prevHolder);
+}
+
 int32_t VideoCaptureAndroid::StartCapture(
     const VideoCaptureCapability& capability) {
   CriticalSectionScoped cs(&_apiCs);

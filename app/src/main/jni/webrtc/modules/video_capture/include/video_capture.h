@@ -109,6 +109,8 @@ class VideoCaptureModule: public RefCountedModule {
   //  Remove capture callback.
   virtual void DeRegisterCaptureCallback() = 0;
 
+  virtual void AttachToPreview(void *prevHolder) = 0;
+
   // Start capture device
   virtual int32_t StartCapture(
       const VideoCaptureCapability& capability) = 0;

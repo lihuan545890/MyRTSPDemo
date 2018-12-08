@@ -91,6 +91,8 @@ public:
     virtual int32_t IncomingI420VideoFrame(I420VideoFrame* video_frame,
                                            int64_t captureTime = 0);
 
+    virtual void AttachToPreview(void *prevHolder){}                                       
+
     // Platform dependent
     virtual int32_t StartCapture(const VideoCaptureCapability& capability)
     {

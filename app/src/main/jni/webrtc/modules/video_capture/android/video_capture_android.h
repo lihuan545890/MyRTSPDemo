@@ -24,6 +24,7 @@ class VideoCaptureAndroid : public VideoCaptureImpl {
   VideoCaptureAndroid(const int32_t id);
   virtual int32_t Init(const int32_t id, const char* deviceUniqueIdUTF8);
 
+  virtual void AttachToPreview(void *prevHolder);
   virtual int32_t StartCapture(const VideoCaptureCapability& capability);
   virtual int32_t StopCapture();
   virtual bool CaptureStarted();
