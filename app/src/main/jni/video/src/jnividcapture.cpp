@@ -3,7 +3,7 @@
 #include "webrtc/modules/video_capture/video_capture_internal.h"
 #include "vid_global_data.h"
 #include "vidcapture.h"
-#include "androidlog.h"
+
 
 uint32_t	    m_bIsInited       =  0;
 JavaVM*         m_jvm             =  NULL;
@@ -112,7 +112,32 @@ bool StartVideoCapture(void *jPrevHolder, int nWidth, int nHeight, int nMaxFPS, 
 
 void StopVideoCapture()
 {
+	m_bIsInited = false;
+}
 
+bool StartPushStream()
+{
+    if (!m_bIsInited)
+    {
+        LOGE("video capture device is not initialized.");
+        return false;
+    }
+
+    JNIEnv* env = NULL;
+    if (m_jvm == NULL)
+    {
+        return false;
+    }	
+
+    if (m_jvm->GetEnv((void**)&env, JNI_VERSION_1_4) != JNI_OK)
+    {
+        return false;
+    }	
+
+	CVidGlobalData * pVidShared = CVidGlobalData::Instance();
+	CVidCapture * pCapture = (CVidCapture*)pVidShared->m_pVidCapture;	
+
+	pCapture->StartPushStream();
 }
 
 void SetOrientation(int nOrient)
@@ -239,6 +264,11 @@ void jni_setScreenSize(JNIEnv * env, jclass,
 //    SetScreenSize(jwidth, jheight);
 }
 
+void jni_startPushStream(JNIEnv * env, jclass)
+{
+	StartPushStream();
+}
+
 void jni_DestroyVideoCapture(JNIEnv * env, jclass)
 {
     DestroyVideoCapture();
@@ -258,7 +288,7 @@ static JNINativeMethod gMethods[] =
     {"getParameters", "()Landroid/hardware/Camera$Parameters;", (void*) jni_getParamters},
     {"setParameters", "(Landroid/hardware/Camera$Parameters;)V", (void*) jni_setParameters},
     {"_setScreenSize", "(II)V", (void*) jni_setScreenSize},
-
+    {"_startPushStream", "()V", (void*) jni_startPushStream},
 };
 
 #ifndef NELEM

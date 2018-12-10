@@ -25,6 +25,14 @@ public class MainActivity extends Activity {
         mLocalPreview = (SurfaceView)findViewById(R.id.local_preview);
         VideoCapture.initialize(this);
         VideoCapture.start(mLocalPreview.getHolder(), 1280, 720, 30,180);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                VideoCapture.startPushStream();
+            }
+        }).start();
+
     }
 
 

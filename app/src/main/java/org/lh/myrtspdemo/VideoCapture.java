@@ -57,7 +57,9 @@ public class VideoCapture {
 //        }
         _destroy();
     }
-
+    public final static void startPushStream(){
+        _startPushStream();
+    }
     private native final static boolean _initialize(Context ctx);
     private native final static void _setScreenSize(int width, int height);
     private native final static boolean _start(SurfaceHolder prevHolder,
@@ -65,10 +67,12 @@ public class VideoCapture {
     private native final static void _stop();
     private native final static void _destroy();
     private native final static boolean _switchCamera();
+    private native final static void  _startPushStream();
     public native final static void setOrientation(int nOrient);
     public native final static void setPreviewRotation(int nRotation);
     public native final static int getCameraId();
     public native final static int getCameraCount();
     public native final static Camera.Parameters getParameters();
     public native final static void setParameters(Camera.Parameters params);
+
 }

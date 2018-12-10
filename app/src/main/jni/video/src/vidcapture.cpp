@@ -1,6 +1,7 @@
 #include "vidcapture.h"
 #include "androidlog.h"
 
+
 CVidCapture::CVidCapture()
 	
 {
@@ -43,6 +44,8 @@ CVidCapture::CVidCapture()
         LOGE("open video capture device failed");
         return;
     }	
+
+	m_RtspServer = new RTSPServerInstance();
 }
 
 CVidCapture::~CVidCapture()
@@ -83,7 +86,7 @@ int CVidCapture::StartCapture(VideoCaptureCapability & capability, int nOrient)
     nOrientNew %= 4;
     orient = static_cast<VideoCaptureRotation>(nOrientNew * kCameraRotate90);
  //   m_spVcm->SetCaptureRotation(orient);
-LOGI("StartCapture orient:%d", orient);
+
     nErr = m_spVcm->StartCapture(capability);
     if (nErr != 0)
     {
@@ -91,11 +94,28 @@ LOGI("StartCapture orient:%d", orient);
         return 0;
     }
     m_capability = capability;
+
+	m_nWidth = capability.width;
+	m_nHeight = capability.height;
+	m_nFps = capability.maxFPS;
+	
 }
 
 void CVidCapture::StopCapture()
 {
 
+}
+
+bool CVidCapture::StartPushStream()
+{
+	LOGI("start video stream push");
+	m_RtspServer->Start(m_nWidth, m_nHeight, m_nFps);
+	return true;
+}
+
+bool CVidCapture::StopPushStream()
+{
+	return true;
 }
 
 void CVidCapture::SetPreviewRotation(int nRotation)
@@ -115,13 +135,16 @@ void CVidCapture::SetOrientation(int nOrient)
 
 void CVidCapture::OnIncomingCapturedFrame(const int32_t id, I420VideoFrame & videoFrame)
 {
+
 }
 
 void CVidCapture::OnCaptureDelayChanged(const int32_t id, const int32_t delay)
 {}
 
 void CVidCapture::OnCaptureFrameRate(const int32_t id, const uint32_t frameRate)
-{}
+{
+
+}
 
 void CVidCapture::OnNoPictureAlarm(const int32_t id, const VideoCaptureAlarm alarm)
 {}

@@ -8,6 +8,7 @@
 #include "webrtc/system_wrappers/interface/scoped_refptr.h"
 #include "webrtc/modules/video_capture/include/video_capture_factory.h"
 #include "webrtc/modules/video_capture/include/video_capture_defines.h"
+#include "RtspServerInstance.h"
 
 using namespace webrtc;
 class CVidCapture : public VideoCaptureDataCallback, public VideoCaptureFeedBack
@@ -37,6 +38,11 @@ public:
     virtual void OnNoPictureAlarm(const int32_t id,
                                   const VideoCaptureAlarm alarm);
     virtual ~CVidCapture();
+
+    bool StartPushStream();
+
+    bool StopPushStream();
+
  protected:
      scoped_refptr<VideoCaptureModule>
        OpenVideoCaptureDevice(uint32_t device);
@@ -50,6 +56,10 @@ public:
     VideoCaptureRotation    m_initialOrient;
     uint32_t m_bIsFrontCamera;
     void* m_jPreviewHolder;
+    int32_t m_nWidth;
+    int32_t m_nHeight;
+    int32_t m_nFps;
+    RTSPServerInstance *m_RtspServer;
 };
 
 #endif

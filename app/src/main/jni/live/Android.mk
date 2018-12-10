@@ -39,7 +39,9 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE := libliveMedia
 LOCAL_CPP_FEATURES := exceptions
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/liveMedia/include $(LOCAL_PATH)/groupsock/include $(LOCAL_PATH)/UsageEnvironment/include
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/liveMedia/include \
+					$(LOCAL_PATH)/groupsock/include \
+					$(LOCAL_PATH)/UsageEnvironment/include
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/liveMedia/include
 LOCAL_CFLAGS := -DLOCALE_NOT_USED
 

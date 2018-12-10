@@ -41,27 +41,29 @@ include $(MY_WEBRTC_ROOT_PATH)/webrtc/third_party/icu/Android.mk
 include $(CLEAR_VARS)
 
 
-#LOCAL_WHOLE_STATIC_LIBRARIES := \
-#			libUsageEnvironment \
-#			libBasicUsageEnvironment \
-#			libgroupsock \
-#			libliveMedia \
-#			libx264 \
-#			libavformat \
-#			libavcodec \
-#			libavutil \
-#			libavfilter \
-#			libswresample \
-#			libswscale \
-#			libsystem_wrappers \
-#			libvideo_capture
+LOCAL_C_INCLUDES := $(MY_WEBRTC_ROOT_PATH)\
+                    $(MY_WEBRTC_ROOT_PATH)/ffmpeg/include \
+                    $(MY_WEBRTC_ROOT_PATH)/common/include \
+                    $(MY_WEBRTC_ROOT_PATH)/video/include \
+                    $(MY_WEBRTC_ROOT_PATH)/rtsp/include \
+                    $(MY_WEBRTC_ROOT_PATH)/live/liveMedia/include \
+                    $(MY_WEBRTC_ROOT_PATH)/live/BasicUsageEnvironment/include \
 
-LOCAL_C_INCLUDES := $(MY_WEBRTC_ROOT_PATH)
-LOCAL_SRC_FILES := $(MY_WEBRTC_ROOT_PATH)/on_load.cpp \
-                   $(MY_WEBRTC_ROOT_PATH)/vidcapture.cpp \
-                   $(MY_WEBRTC_ROOT_PATH)/jnividcapture.cpp
+LOCAL_SRC_FILES := $(MY_WEBRTC_ROOT_PATH)/common/src/on_load.cpp \
+                   $(MY_WEBRTC_ROOT_PATH)/common/src/framequeue.cpp \
+                   $(MY_WEBRTC_ROOT_PATH)/video/src/vidcapture.cpp \
+                   $(MY_WEBRTC_ROOT_PATH)/video/src/jnividcapture.cpp \
+                   $(MY_WEBRTC_ROOT_PATH)/rtsp/src/H264LiveFramedSource.cpp \
+                   $(MY_WEBRTC_ROOT_PATH)/rtsp/src/H264LiveCaptureThread.cpp \
+                   $(MY_WEBRTC_ROOT_PATH)/rtsp/src/H264LiveServerMediaSubsession.cpp \
+                   $(MY_WEBRTC_ROOT_PATH)/rtsp/src/RtspServerInstance.cpp
+
 
 LOCAL_WHOLE_STATIC_LIBRARIES := \
+			libUsageEnvironment \
+			libBasicUsageEnvironment \
+			libgroupsock \
+			libliveMedia \
 			libx264 \
 			libavformat \
 			libavcodec \
@@ -79,6 +81,6 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
 			libcommon_video \
 			libvideo_capture
 
-LOCAL_LDLIBS += -llog -lGLESv2 -lOpenSLES -lz	
+LOCAL_LDLIBS += -llog -lGLESv2 -lOpenSLES -lz -Wdeprecated-declarations
 LOCAL_MODULE := librtspdemo-jni
 include $(BUILD_SHARED_LIBRARY)
