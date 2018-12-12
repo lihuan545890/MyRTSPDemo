@@ -16,7 +16,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 #include <iostream>
 #include "H264LiveServerMediaSubsession.h"
 #include "H264LiveFramedSource.h"
-
+#include "androidlog.h"
 using namespace std;
 
 H264LiveServerMediaSubsession* H264LiveServerMediaSubsession::createNew(UsageEnvironment& env, 
@@ -31,7 +31,7 @@ H264LiveServerMediaSubsession::H264LiveServerMediaSubsession(UsageEnvironment& e
       mAuxSDPLine(NULL), mDoneFlag(0), mDummyRTPSink(NULL),
       mWidth(width), mHeight(height), mFps(fps)
 {
-
+    LOGI("H264LiveServerMediaSubsession..........................");
 }
 
 H264LiveServerMediaSubsession::~H264LiveServerMediaSubsession()
@@ -114,6 +114,7 @@ char const* H264LiveServerMediaSubsession::getAuxSDPLine(RTPSink* rtpSink, Frame
 FramedSource* H264LiveServerMediaSubsession::createNewStreamSource(unsigned clientSessionId, unsigned& estBitrate)
 {
     // Create the video source:
+    LOGI("createNewStreamSource..........................");
     H264LiveFramedSource* cameraSource = H264LiveFramedSource::createNew(envir(), mWidth, mHeight, mFps);
     if (cameraSource == NULL) return NULL;
 

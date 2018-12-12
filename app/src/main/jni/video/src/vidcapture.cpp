@@ -1,6 +1,8 @@
 #include "vidcapture.h"
 #include "androidlog.h"
 
+#include "framequeue.h"
+FrameQueue videoqueue;
 
 CVidCapture::CVidCapture()
 	
@@ -64,6 +66,8 @@ void CVidCapture::AttachPreviewHolder(void *prevHolder)
     m_jPreviewHolder = prevHolder;
 }
 
+
+//FILE *fp2=fopen("/sdcard/test.h264", "wb");
 int CVidCapture::StartCapture(VideoCaptureCapability & capability, int nOrient)
 {
     int32_t nErr = 0;
@@ -98,7 +102,10 @@ int CVidCapture::StartCapture(VideoCaptureCapability & capability, int nOrient)
 	m_nWidth = capability.width;
 	m_nHeight = capability.height;
 	m_nFps = capability.maxFPS;
-	
+
+	m_pBuf = new u_int8_t[m_nWidth * m_nHeight * 3 / 2];
+	memset(m_pBuf, 0, m_nWidth * m_nHeight * 3 / 2);
+
 }
 
 void CVidCapture::StopCapture()
@@ -110,11 +117,15 @@ bool CVidCapture::StartPushStream()
 {
 	LOGI("start video stream push");
 	m_RtspServer->Start(m_nWidth, m_nHeight, m_nFps);
+
+	frame_queue_init(&videoqueue);
+	frame_queue_start(&videoqueue);		
 	return true;
 }
 
 bool CVidCapture::StopPushStream()
 {
+	frame_queue_destroy(&videoqueue);
 	return true;
 }
 
@@ -133,8 +144,27 @@ void CVidCapture::SetOrientation(int nOrient)
 
 }
 
+//FILE *fp =fopen("/sdcard/test1.yuv", "wb");
 void CVidCapture::OnIncomingCapturedFrame(const int32_t id, I420VideoFrame & videoFrame)
 {
+	int size = videoFrame.width() * videoFrame.height();
+	memcpy(m_pBuf, videoFrame.buffer(kYPlane), size);
+	memcpy(m_pBuf + size, videoFrame.buffer(kUPlane), size / 4);	
+	memcpy(m_pBuf + size * 5 / 4, videoFrame.buffer(kVPlane), size / 4);		
+
+	StreamBuf struBuf;
+	struBuf.frame = m_pBuf;
+	struBuf.bufsize = size * 3 / 2;
+	
+    if(frame_queue_count(&videoqueue) > 0)
+    {
+		StreamBuf tmpBuf;
+	    frame_queue_get(&videoqueue, &tmpBuf, 1);
+    }
+	
+	frame_queue_put(&videoqueue, &struBuf);	
+	
+
 
 }
 

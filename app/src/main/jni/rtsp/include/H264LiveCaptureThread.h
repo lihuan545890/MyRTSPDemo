@@ -52,7 +52,7 @@ public:
     static void* H264LiveCaptureProc(void* ptr);
     void CaptureProc();
     int InitVideo();
-    int EncVideo(AVFrame* frame, void** output, int* len);
+    int EncVideo(uint8_t* buf, void** output, int* len);
 
 private:
  //   H264LiveCaptureContext mCtx;
@@ -71,8 +71,8 @@ private:
 	
 	AVCodecContext *codecContext;
 
-	AVFrame *frame;
-	AVFrame *tmpFrame;
+	AVFrame *pFrameYUV;
+	uint8_t *out_buffer;
 	AVPacket packet;
 	int count, got_output;
     

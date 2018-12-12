@@ -32,7 +32,6 @@ public class VideoCapture {
         int height = dm.heightPixels;
         if (width > height)
         {
-            // keep width < height, portrait mode
             int t = width;
             width = height;
             height = t;
@@ -52,9 +51,6 @@ public class VideoCapture {
     }
 
     public final static void destroy() {
-//        if (sArc != null) {
-//            sArc.destroy();
-//        }
         _destroy();
     }
     public final static void startPushStream(){

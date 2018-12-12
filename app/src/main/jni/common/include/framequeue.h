@@ -18,7 +18,7 @@ extern "C" {
 #include 	"libswresample/swresample.h"
 
 typedef struct StreamBuf{
-    AVFrame *frame;
+    unsigned char *frame;
     int bufsize;	
 }StreamBuf;
 

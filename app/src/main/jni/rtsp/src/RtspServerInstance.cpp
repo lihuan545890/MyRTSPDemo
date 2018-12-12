@@ -17,6 +17,7 @@ RTSPServerInstance::~ RTSPServerInstance()
 
 bool RTSPServerInstance::Start(int nWidth, int nHeight, int nFps)
 {
+	LOGI("RTSPServerInstance start");
 	m_scheduler = BasicTaskScheduler::createNew();
 	if(!m_scheduler)
 	{
@@ -40,13 +41,13 @@ bool RTSPServerInstance::Start(int nWidth, int nHeight, int nFps)
 
 	sms->addSubsession(H264LiveServerMediaSubsession::createNew(*m_uEnv,
 		 nWidth, nHeight, nFps));
-
-//	char* url = m_rtspServer->rtspURL(sms);
-//	LOGI("Play this Stream %d x %d fps:%d using the URL: \"%s\"",nWidth,  nHeight,  nFps, url);
-//	delete[] url;	
+	m_rtspServer->addServerMediaSession(sms);
+	char* url = m_rtspServer->rtspURL(sms);
+	LOGI("Play this Stream %d x %d fps:%d using the URL: \"%s\"",nWidth,  nHeight,  nFps, url);
+	delete[] url;	
 
 	m_uEnv->taskScheduler().doEventLoop();
-
+	LOGI("RTSPServerInstance start end");
 	return true;
 }
 

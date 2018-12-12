@@ -8,6 +8,7 @@
 #include "webrtc/system_wrappers/interface/scoped_refptr.h"
 #include "webrtc/modules/video_capture/include/video_capture_factory.h"
 #include "webrtc/modules/video_capture/include/video_capture_defines.h"
+#include "webrtc/video_frame.h"
 #include "RtspServerInstance.h"
 
 using namespace webrtc;
@@ -60,6 +61,7 @@ public:
     int32_t m_nHeight;
     int32_t m_nFps;
     RTSPServerInstance *m_RtspServer;
+    u_int8_t *m_pBuf;
 };
 
 #endif

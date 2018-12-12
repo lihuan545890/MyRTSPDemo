@@ -16,24 +16,25 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 
 #include <iostream>
 #include "H264LiveFramedSource.h"
-
+#include "androidlog.h"
 using namespace std;
 
 H264LiveFramedSource* H264LiveFramedSource::createNew(UsageEnvironment& env, 
     int width, int height, int fps)
 {
+	LOGI("H264LiveFramedSource  createNew.......................0");
     H264LiveCaptureThread* thread = new H264LiveCaptureThread();
     if (NULL == thread)
     {
         return NULL;
     }
-
+	LOGI("H264LiveFramedSource  createNew.......................1");
     if (!thread->Create(width, height, fps))
     {
         delete thread;
         return NULL;
     }
-
+	LOGI("H264LiveFramedSource  createNew.......................2");
     H264LiveFramedSource* newSource = new H264LiveFramedSource(env, thread);
 
     return newSource;
